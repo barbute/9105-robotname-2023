@@ -73,8 +73,6 @@ public class DriveSubsystem extends SubsystemBase {
     resetEncoders();
 
     robotDrive = new DifferentialDrive(leftMotors, rightMotors);
-    //Replace 0's with encoders
-    //^
     robotOdometry = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
     robotOdometry.resetPosition(navX.getRotation2d(), getLeftEncoderPosition(), getHeading(), new Pose2d());
   }
