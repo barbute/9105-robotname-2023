@@ -21,10 +21,10 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private CANSparkMax leftFront;
-  private CANSparkMax leftBack;
-  private CANSparkMax rightFront;
-  private CANSparkMax rightBack;
+  CANSparkMax leftFront;
+  CANSparkMax leftBack;
+  CANSparkMax rightFront;
+  CANSparkMax rightBack;
 
   RelativeEncoder leftEncoder;
   RelativeEncoder rightEncoder;
@@ -36,7 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
   MotorControllerGroup rightMotors = new MotorControllerGroup(rightBack, rightFront);
 
   
-  private static final Gyro navX = new AHRS(SPI.Port.kMXP);
+  private static final AHRS navGyro = new AHRS(SPI.Port.kMXP);
 
   public DriveSubsystem() {
 
@@ -68,18 +68,23 @@ public class DriveSubsystem extends SubsystemBase {
 
     leftMotors.setInverted(true);
 
-    navX.reset();
-    navX.calibrate();
+    navGyro.reset();
+    navGyro.calibrate();
     resetEncoders();
 
     robotDrive = new DifferentialDrive(leftMotors, rightMotors);
-    robotOdometry = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
-    robotOdometry.resetPosition(navX.getRotation2d(), getLeftEncoderPosition(), getHeading(), new Pose2d());
+
+    robotOdometry = new DifferentialDriveOdometry(navGyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    robotOdometry.resetPosition(navGyro.getRotation2d(), getLeftEncoderPosition(), getHeading(), new Pose2d());
   }
 
   public void resetEncoders() {
     rightEncoder.setPosition(0);
     leftEncoder.setPosition(0);
+  }
+
+  public float getPitch() {
+    return navGyro.getPitch();
   }
 
   public void arcadeDrive(double speed, double rotation) {
@@ -103,11 +108,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getTurnRate() {
-    return -navX.getRate();
+    return -navGyro.getRate();
   }
 
   public static double getHeading() {
-    return navX.getRotation2d().getDegrees();
+    return navGyro.getRotation2d().getDegrees();
   }
 
   public Pose2d getPose() {
@@ -116,7 +121,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    robotOdometry.resetPosition(navX.getRotation2d(), getLeftEncoderPosition(), getHeading(), pose);
+    robotOdometry.resetPosition(navGyro.getRotation2d(), getLeftEncoderPosition(), getHeading(), pose);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -146,8 +151,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public static void zeroHeading() {
-    navX.reset();
-    navX.calibrate();
+    navGyro.reset();
+    navGyro.calibrate();
   }
 
   public Gyro getGyro() {
@@ -156,7 +161,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    robotOdometry.update(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    robotOdometry.update(navGyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
     SmartDashboard.putNumber("Left encoder value meters", getLeftEncoderPosition());
     SmartDashboard.putNumber("Right encoder value meters", getRightEncoderPosition());
