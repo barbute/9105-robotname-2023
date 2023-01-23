@@ -14,6 +14,7 @@ public class StationEngagerSubsystem extends SubsystemBase {
   double kI = 0;
   double kD = 0;
   double kP = 0;
+  float navPitch;
 
   CANSparkMax leftFront;
   CANSparkMax leftBack;
@@ -22,12 +23,11 @@ public class StationEngagerSubsystem extends SubsystemBase {
   
   private AHRS navGyro = new AHRS(SPI.Port.kMXP);
   private PIDController pid = new PIDController(kP, kI, kD);  
+  float setpoint = 0;
 
-  @Override
-  public void periodic() {
+  public StationEngagerSubsystem() {
     pid.setTolerance(2.5);
-    float navPitch = navGyro.getPitch();
-    float setpoint = 0;
+    navPitch = navGyro.getPitch();
     
     leftFront = new CANSparkMax(Constants.leftFrontMotor, 
     CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -37,6 +37,10 @@ public class StationEngagerSubsystem extends SubsystemBase {
         CANSparkMaxLowLevel.MotorType.kBrushless);
     rightBack = new CANSparkMax(Constants.rightBackMotor, 
         CANSparkMaxLowLevel.MotorType.kBrushless);
+  }
+
+  @Override
+  public void periodic() {
 
     double pidCalc = pid.calculate(navPitch, setpoint);
     
@@ -44,5 +48,6 @@ public class StationEngagerSubsystem extends SubsystemBase {
     leftBack.set(pidCalc);
     rightFront.set(pidCalc);
     rightBack.set(pidCalc);
+    
   }
 }

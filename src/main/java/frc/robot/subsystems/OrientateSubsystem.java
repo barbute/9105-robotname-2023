@@ -16,7 +16,7 @@ public class OrientateSubsystem extends SubsystemBase {
     double kD = 0;
     double kP = 0;
     double pidCalc;
-    float navPitch;
+    float navYaw;
     float setPoint;
   
     CANSparkMax leftFront;
@@ -32,9 +32,6 @@ public class OrientateSubsystem extends SubsystemBase {
         setPoint = 0;
         pid.setTolerance(1);
 
-        navPitch = navGyro.getPitch();
-        pidCalc = pid.calculate(navPitch, setPoint);
-
         leftFront = new CANSparkMax(Constants.leftFrontMotor, 
         CANSparkMaxLowLevel.MotorType.kBrushless);
         leftBack = new CANSparkMax(Constants.leftBackMotor, 
@@ -44,15 +41,18 @@ public class OrientateSubsystem extends SubsystemBase {
         rightBack = new CANSparkMax(Constants.rightBackMotor, 
             CANSparkMaxLowLevel.MotorType.kBrushless);
 
-        if (navPitch != 0) {
-            leftFront.set(pidCalc);
-            leftBack.set(pidCalc);
-            rightFront.set(pidCalc);
-            rightBack.set(pidCalc);
-        }
-
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+
+        navYaw = navGyro.getYaw();
+        pidCalc = pid.calculate(navYaw, setPoint);
+
+        leftFront.set(pidCalc);
+        leftBack.set(pidCalc);
+        rightFront.set(pidCalc);
+        rightBack.set(pidCalc);
+        
+    }
 }
