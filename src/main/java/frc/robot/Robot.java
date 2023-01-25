@@ -1,4 +1,3 @@
-//Should work *crosses fingers*
 
 package frc.robot;
 
@@ -6,18 +5,21 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot 
+{
+  private Command m_autonomousCommand;
 
-  RobotContainer robotContainer;
-  Command autoCommand;
+  private RobotContainer m_robotContainer;
 
   @Override
-  public void robotInit() {
-    robotContainer = new RobotContainer();
+  public void robotInit() 
+  {
+    m_robotContainer = new RobotContainer();
   }
 
   @Override
-  public void robotPeriodic() {
+  public void robotPeriodic() 
+  {
     CommandScheduler.getInstance().run();
   }
 
@@ -28,10 +30,13 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void autonomousInit() {
-    autoCommand = robotContainer.getAutonomousCommand();
-    if(autoCommand != null) {
-      autoCommand.schedule();
+  public void autonomousInit() 
+  {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    if (m_autonomousCommand != null) 
+    {
+      m_autonomousCommand.schedule();
     }
   }
 
@@ -39,9 +44,11 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {
-    if (autoCommand != null) {
-      autoCommand.cancel();
+  public void teleopInit() 
+  {
+    if (m_autonomousCommand != null) 
+    {
+      m_autonomousCommand.cancel();
     }
   }
 
@@ -49,8 +56,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {}
 
   @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
+  public void testInit() 
+  {
     CommandScheduler.getInstance().cancelAll();
   }
 
