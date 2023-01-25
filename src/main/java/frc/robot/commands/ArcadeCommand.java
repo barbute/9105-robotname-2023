@@ -1,37 +1,48 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ArcadeCommand extends CommandBase {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveSubsystem;
+
+public class ArcadeCommand extends CommandBase 
+{
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
   private DoubleSupplier speed;
   private DoubleSupplier rotation;
-  private DriveSubsystem arcadeDrive;
+  private DriveSubsystem robotDrive;
 
-  public ArcadeCommand(DoubleSupplier Speed, DoubleSupplier Rotation, DriveSubsystem drive) {
-    arcadeDrive = drive;
-    speed = Speed;
-    rotation = Rotation;
-
-    addRequirements(drive);
+  public ArcadeCommand(DoubleSupplier speed, DoubleSupplier rotation, DriveSubsystem drive) 
+  {
+    this.speed = speed;
+    this.rotation = rotation;
+    robotDrive = drive;
+    addRequirements(robotDrive);
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
-  public void execute() {
-    arcadeDrive.arcadeDrive(speed.getAsDouble(), rotation.getAsDouble());
+  public void initialize() 
+  {
+    System.out.println("Command ARCADE has started");
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void execute() 
+  {
+    robotDrive.arcadeDrive(speed.getAsDouble(), rotation.getAsDouble());
+  }
 
   @Override
-  public boolean isFinished() {
+  public void end(boolean interrupted) 
+  {
+    System.out.println("Command ARCADE has stopped");
+  }
+
+  @Override
+  public boolean isFinished() 
+  {
     return false;
   }
 }
