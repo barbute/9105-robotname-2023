@@ -71,7 +71,7 @@ public class RobotContainer
     chooser = new SendableChooser<>();
 
     //Adds button options
-    chooser.addOption("Test Path", loadPathplannerTrajectoryToRamseteCommand(
+    chooser.addOption("Test Path", loadPathPlannerTrajetoryToRamseteCommand(
       "../../../deploy/pathplanner/generatedJSON/TestPath.wpilib.json",
      true));
 
@@ -94,7 +94,6 @@ public class RobotContainer
       return new InstantCommand();
     }
 
-    boolean yes = true;
     RamseteCommand ramseteCommand = new RamseteCommand(
       trajectory, 
       robotDrive::getPose, 
@@ -105,7 +104,6 @@ public class RobotContainer
       new PIDController(Constants.DriveConstants.kPDriveVel, 0, 0), 
       new PIDController(Constants.DriveConstants.kPDriveVel, 0, 0), 
       robotDrive::setTankDriveVolts, 
-      yes,
       robotDrive);
 
     //Reset odometry first and then run command
