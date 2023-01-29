@@ -32,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase
   private RelativeEncoder leftEncoder;
   private RelativeEncoder rightEncoder;
 
-  public Gyro navX;
+  public AHRS navX;
 
   private DifferentialDriveOdometry odometry;
 
