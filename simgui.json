@@ -11,5 +11,18 @@
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Autonomous: /SendableChooser[0]": "String Chooser"
     }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "Autonomous: ": {
+          "SendableChooser[0]": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
+    }
   }
 }
