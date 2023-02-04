@@ -127,20 +127,20 @@ public class DriveSubsystem extends SubsystemBase {
 
   /* Autonomous Getter / Setter Methods */
 
-  public double getRightEncoderPosition() {
-    return rightEncoder.getPosition();
-  }
-
   public double getLeftEncoderPosition() {
     return -leftEncoder.getPosition();
   }
 
-  public double getRightEncoderVelocity() {
-    return rightEncoder.getVelocity();
+  public double getRightEncoderPosition() {
+    return rightEncoder.getPosition();
   }
 
   public double getLeftEncoderVelocity() {
     return -leftEncoder.getVelocity();
+  }
+
+  public double getRightEncoderVelocity() {
+    return rightEncoder.getVelocity();
   }
 
   public double getGyroHeading() {
