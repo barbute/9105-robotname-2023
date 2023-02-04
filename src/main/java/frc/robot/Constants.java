@@ -55,4 +55,10 @@ public final class Constants {
     public static final double LINEAR_DIST_CONVERSION_FACTOR = 
       (convertToLinDist(GEAR_RATIO, WHEEL_RADIUS)); // Converts ticks to metres
   }
+
+  public static class IntakeConstants {
+
+    public static final int ARM_MOTOR = 5;
+    public static final int GRABBER_MOTOR = 6;
+  }
 }
