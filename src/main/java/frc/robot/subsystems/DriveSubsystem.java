@@ -110,8 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
     zeroHeading();
 
     /* Odometry */
-    odometry = new DifferentialDriveOdometry
-    (navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
+    odometry = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
 
     resetOdometry(getPose());
   }
