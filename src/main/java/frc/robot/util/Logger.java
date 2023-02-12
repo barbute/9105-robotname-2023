@@ -12,7 +12,7 @@ public class Logger {
     LocalDateTime time = LocalDateTime.now();
 
     String name = DTF.format(time);
-    String filepath = "Users/9105/Desktop/" + name + ".csv";
+    String filepath = "/U/logs/" + name + ".csv";
     String titles;
 
     File file;

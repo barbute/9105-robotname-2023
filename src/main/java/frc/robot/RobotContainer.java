@@ -1,9 +1,5 @@
 //In Java We Trust
 
-/*
- * Note: Fix path planner loading path
- */
-
 package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
@@ -15,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.DriveSubsystem;
@@ -73,7 +68,8 @@ public class RobotContainer {
     autonChooser = new SendableChooser<>();
 
     PathConstraints trajectoryConstraints = new PathConstraints(Constants.AutonoumousConstants.DRIVE_VELOCITY, Constants.AutonoumousConstants.MAX_ACCELERATION);
-    PathPlannerTrajectory mainTrajectory = PathPlanner.loadPath("../../../deploy/pathplanner/generatedJSON/TestPath.wpilib.json" /*"/Users/k2so/Documents/GitHub/9105-robotname-2023/src/main/deploy/pathplanner/generatedJSON/TestPath.wpilib.json"*/, trajectoryConstraints);
+    PathPlannerTrajectory mainTrajectory = PathPlanner.loadPath("TestPath.wpilib.json" , trajectoryConstraints);
+
 
     autonChooser.addOption("Test Path", robotDrive.followPath(
       mainTrajectory,
@@ -88,11 +84,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    LT.toggleOnTrue(sniperCommand);
+    
+    // NOTE: fix button bindings
+    LT.onTrue(sniperCommand);
 
     /* LEDs */
-    xButton.toggleOnTrue(new InstantCommand(LEDs::setBlue, LEDs));
-    yButton.toggleOnTrue(new InstantCommand(LEDs::setRed, LEDs));
+    //xButton.toggleOnTrue(new InstantCommand(LEDs::setBlue, LEDs));
+    //yButton.toggleOnTrue(new InstantCommand(LEDs::setRed, LEDs));
   }
 
   public Command getAutonomousCommand() {

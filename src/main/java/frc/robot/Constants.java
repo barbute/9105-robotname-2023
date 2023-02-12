@@ -16,15 +16,15 @@ public final class Constants {
   }
 
   public static class DrivebaseConstants {
-    public static final int LF_MOTOR = 11;
-    public static final int LB_MOTOR = 12;
-    public static final int RF_MOTOR = 13;
-    public static final int RB_MOTOR = 14;
+    public static final int LF_MOTOR_CANID = 11;
+    public static final int LB_MOTOR_CANID = 12;
+    public static final int RF_MOTOR_CANID = 13;
+    public static final int RB_MOTOR_CANID = 14;
 
     public static final int CONTROLLER_PORT = 0;
 
     public static final int MOTOR_AMP_LIMIT = 80;
-    public static final int PDH_PORT = 1;
+    public static final int PDH_PORT_CANID = 1;
     public static final double DEADZONE = 0.1;
     public static final double SNIPER_SPEED = 0.2;
   }
@@ -61,8 +61,8 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int ARM_MOTOR = 5;
-    public static final int GRABBER_MOTOR = 6;
+    public static final int ARM_MOTOR_CANID = 21;
+    public static final int GRABBER_MOTOR_CANID = 22;
 
     public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
     public static final int GRABBER_MOTOR_CURRENT_LIMIT = 30;

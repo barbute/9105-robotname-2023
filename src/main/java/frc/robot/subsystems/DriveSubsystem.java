@@ -6,7 +6,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -59,44 +58,26 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     /* Robot Drive */
     leftFrontMotor = new CANSparkMax(
-      Constants.DrivebaseConstants.LF_MOTOR,
+      Constants.DrivebaseConstants.LF_MOTOR_CANID,
       CANSparkMax.MotorType.kBrushless
     );
 
     leftBackMotor = new CANSparkMax(
-      Constants.DrivebaseConstants.LB_MOTOR,
+      Constants.DrivebaseConstants.LB_MOTOR_CANID,
       CANSparkMax.MotorType.kBrushless
     );
     
     rightFrontMotor = new CANSparkMax(
-      Constants.DrivebaseConstants.RF_MOTOR,
+      Constants.DrivebaseConstants.RF_MOTOR_CANID,
       CANSparkMax.MotorType.kBrushless
     );
     
     rightBackMotor = new CANSparkMax(
-      Constants.DrivebaseConstants.RB_MOTOR,
+      Constants.DrivebaseConstants.RB_MOTOR_CANID,
       CANSparkMax.MotorType.kBrushless
     );
 
-    /* 
-    leftFrontMotor.setIdleMode(IdleMode.kBrake);
-    leftBackMotor.setIdleMode(IdleMode.kBrake);
-    rightFrontMotor.setIdleMode(IdleMode.kBrake);
-    rightBackMotor.setIdleMode(IdleMode.kBrake);
-
-    leftBackMotor.follow(leftFrontMotor);
-    rightBackMotor.follow(rightFrontMotor);
-
-    leftMotors = new MotorControllerGroup(leftFrontMotor, leftBackMotor);
-    rightMotors = new MotorControllerGroup(rightFrontMotor, rightBackMotor);
-
-    leftMotors.setInverted(true);
-     
-    leftFrontMotor.setSmartCurrentLimit(Constants.DrivebaseConstants.MOTOR_AMP_LIMIT);
-    leftBackMotor.setSmartCurrentLimit(Constants.DrivebaseConstants.MOTOR_AMP_LIMIT);
-    rightFrontMotor.setSmartCurrentLimit(Constants.DrivebaseConstants.MOTOR_AMP_LIMIT);
-    rightBackMotor.setSmartCurrentLimit(Constants.DrivebaseConstants.MOTOR_AMP_LIMIT);
-    */
+    leftFrontMotor.setInverted(true);
 
     robotDrive = new DifferentialDrive(leftFrontMotor, rightFrontMotor);
 
@@ -139,16 +120,10 @@ public class DriveSubsystem extends SubsystemBase {
     /* Logger */
     dataLogger = new Logger();
     timer = new Timer();
-    PDH = new PowerDistribution(Constants.DrivebaseConstants.PDH_PORT, ModuleType.kRev);
+    PDH = new PowerDistribution(Constants.DrivebaseConstants.PDH_PORT_CANID, ModuleType.kRev);
   }
 
   public void arcadeDrive(double speed, double rotation, boolean sniperMode) {
-    //speed = (speed < 0.1 && speed > -0.1) ? 0 : speed * 0.7; // Also reduces the speed to 70%
-    //rotation = (rotation < 0.1 && rotation > -0.1) ? 0 : rotation;
-
-    //speed = (speed < Constants.DrivebaseConstants.DEADZONE && speed > -Constants.DrivebaseConstants.DEADZONE) ? ((speed > 0) ? Math.sqrt(speed) : -1 * Math.sqrt(Math.abs(speed))) : speed;
-    //rotation = (rotation < Constants.DrivebaseConstants.DEADZONE && rotation > -Constants.DrivebaseConstants.DEADZONE) ? ((rotation > 0) ? Math.sqrt(rotation) : -1 * Math.sqrt(Math.abs(rotation))) : rotation;
-    
     if (speed < DEADZONE_VAL && speed > -DEADZONE_VAL) {
       if (speed > 0) {
         speed = Math.sqrt(speed);
@@ -170,11 +145,6 @@ public class DriveSubsystem extends SubsystemBase {
     speed = (sniperMode) ?  speed * SNIPER_SPEED : speed * SPEED;
     rotation = (sniperMode) ?  rotation * SNIPER_SPEED : rotation * ROTATION;
 
-    /* 
-    leftMotors.set(speed - rotation);
-    rightMotors.set(speed + rotation);
-
-    robotDrive.feed();*/
     robotDrive.arcadeDrive(speed, rotation);
   }
 
@@ -265,26 +235,6 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
 
-  /* Auto Engage */
-  public Command autoEngage(double setpoint) {
-    // Note: tune PIDs
-    int P = 1;
-    int I = 1;
-    int D = 1;
-    PIDController pid = new PIDController(P, I, D);
-    double pitch = navX.getPitch();
-    double speed = pid.calculate(pitch, setpoint);
-
-    return new SequentialCommandGroup(
-      new InstantCommand(
-        () -> {
-          leftFrontMotor.set(speed);
-          rightFrontMotor.set(speed);
-        }
-      )
-    );
-  }
-
   /* Dashboard Display */
   @Override
   public void periodic() {
@@ -296,16 +246,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left Motor Temp: ", getLeftMotorTemp());
     SmartDashboard.putNumber("Right Motor Temp: ", getRightMotorTemp());
 
-    if (timer.get() == 1) {
-      timer.reset();
-      double velocity = (getRightEncoderVelocity() + getLeftEncoderVelocity()) / 2;
-      dataLogger.logTelemetryData(
-        getLeftMotorTemp(),
-        getRightMotorTemp(),
-        velocity,
-        PDH.getVoltage()
-        );
-    }
+    double velocity = (getRightEncoderVelocity() + getLeftEncoderVelocity()) / 2;
+
+    dataLogger.logTelemetryData(getLeftMotorTemp(), getRightMotorTemp(), velocity, PDH.getVoltage());
   }
 
   @Override
